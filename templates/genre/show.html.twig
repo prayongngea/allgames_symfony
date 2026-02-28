@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ genre.name }} - AllGames{% endblock %}
+
+{% block body %}
+<section class="text-gray-400 bg-gray-900 body-font">
+    <div class="container px-5 py-14 mx-auto">
+        <h1 class="title-font font-medium text-4xl mb-8 text-white">{{ genre.name }}</h1>
+        {% if genre.games|length > 0 %}
+            <div class="flex flex-wrap sm:-m-4 -mx-4 -mb-10 -mt-4">
+                {% for game in genre.games %}
+                    {% include 'game/_game_item.html.twig' %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-gray-400">No games in this genre yet.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

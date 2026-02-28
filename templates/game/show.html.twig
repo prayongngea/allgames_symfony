@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ game.name }} - AllGames{% endblock %}
+
+{% block body %}
+<section class="text-gray-400 bg-gray-900 body-font">
+    <div class="container px-5 py-24 mx-auto flex flex-wrap">
+        <div class="lg:w-1/2 sm:w-1/3 w-full rounded-lg overflow-hidden mt-6 sm:mt-0 sm:pr-5">
+            {% if game.imageName %}
+                <img src="{{ vich_uploader_asset(game, 'imageFile') }}" class="object-cover object-center w-full h-full rounded-lg" alt="{{ game.name }}">
+            {% else %}
+                <div class="w-full h-64 flex items-center justify-center bg-gray-700 rounded-lg">
+                    <div class="text-center text-gray-500">
+                        <div class="text-8xl mb-2">🎮</div>
+                        <p>Pas d'image disponible</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <div class="flex flex-wrap -mx-4 lg:w-1/2 sm:w-2/3 content-between">
+            <div class="w-full sm:p-4 px-4 mb-6">
+                <h1 class="title-font font-medium text-xl mb-2 text-white">{{ game.name }}</h1>
+                <div class="leading-relaxed">
+                    {{ game.description|raw }}
+                </div>
+            </div>
+            <div class="p-4 sm:w-1/2 lg:w-1/4 w-1/2">
+                <h2 class="title-font font-medium text-3xl text-white">{{ game.reviews|length }}</h2>
+                <p class="leading-relaxed">Avis</p>
+            </div>
+            <div class="p-4 sm:w-1/2 lg:w-1/4 w-1/2">
+                {% if game.editor %}
+                    <h2 class="title-font font-medium text-xl text-white">{{ game.editor.name }}</h2>
+                {% else %}
+                    <h2 class="title-font font-medium text-xl text-white">-</h2>
+                {% endif %}
+                <p class="leading-relaxed">Éditeur</p>
+            </div>
+            <div class="p-4 sm:w-1/2 lg:w-1/4 w-1/2">
+                {% if game.releaseDate %}
+                    <h2 class="title-font font-medium text-3xl text-white">{{ game.releaseDate|date('Y') }}</h2>
+                {% else %}
+                    <h2 class="title-font font-medium text-3xl text-white">-</h2>
+                {% endif %}
+                <p class="leading-relaxed">Sortie</p>
+            </div>
+            <div class="p-4 sm:w-1/2 lg:w-1/4 w-1/2">
+                <h2 class="title-font font-medium text-3xl text-white">{{ game.wishlistItems|length }}</h2>
+                <p class="leading-relaxed">En liste</p>
+            </div>
+            {% if game.genres|length > 0 %}
+            <div class="p-4">
+                <h2 class="title-font font-medium text-xl text-white pb-2">Catégories</h2>
+                {% for genre in game.genres %}
+                    <a class="bg-gray-700 text-blue-400 text-xs font-medium me-2 px-2.5 py-0.5 rounded hover:bg-blue-500 hover:text-white transition-colors" href="{{ path('app_genre_show', {'id': genre.id}) }}">{{ genre.name }}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<section class="text-gray-400 bg-gray-900 body-font pb-10">
+    <div class="container px-5 mx-auto flex flex-wrap">
+        {% include 'wishlist/_wishlist_button.html.twig' with {
+            game: game,
+            is_in_wishlist: is_in_wishlist
+        } %}
+    </div>
+</section>
+
+<section class="text-gray-400 bg-gray-900 body-font pb-10">
+    <div class="container px-5 mx-auto max-w-2xl">
+        {% if app.user %}
+            {% include 'review/_form.html.twig' with { gameId: game.id, review: user_review } %}
+        {% else %}
+            {% include 'review/_form_guest.html.twig' with { gameId: game.id } %}
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

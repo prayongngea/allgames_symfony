@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  php:
+    build: .
+    container_name: all_games_php
+    volumes:
+      - .:/var/www/html
+      - ./public/images:/var/www/html/public/images
+    environment:
+      APP_ENV: dev
+      APP_SECRET: changethissecretkey1234567890abcd
+      DATABASE_URL: "mysql://all_games:all_games@mysql:3306/all_games?serverVersion=8.0.32&charset=utf8mb4"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - all_games
+
+  nginx:
+    image: nginx:alpine
+    container_name: all_games_nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+    networks:
+      - all_games
+
+  mysql:
+    image: mysql:8.0
+    container_name: all_games_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: all_games
+      MYSQL_USER: all_games
+      MYSQL_PASSWORD: all_games
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    networks:
+      - all_games
+
+volumes:
+  mysql_data:
+
+networks:
+  all_games:
+    driver: bridge

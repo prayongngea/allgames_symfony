@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}AllGames{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>🎮</text></svg>">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            blue: { 500: '#01a9f0', 600: '#0090cc' }
+                        }
+                    }
+                }
+            }
+        </script>
+        {% block stylesheets %}
+            {{ importmap('app') }}
+        {% endblock %}
+        {% block javascripts %}{% endblock %}
+    </head>
+    <body class="bg-gray-900">
+        <header class="text-gray-400 bg-gray-950 body-font sticky top-0 z-50">
+            <div class="container mx-auto flex flex-wrap p-4 flex-col md:flex-row items-center">
+                <a class="flex title-font font-medium items-center text-white mb-4 md:mb-0" href="{{ path('app_home') }}">
+                    <span class="text-2xl font-bold">🎮 <span class="text-blue-500">All</span>Jeux</span>
+                </a>
+                <nav class="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">
+                    <a class="mr-5 hover:text-white {% if app.request.attributes.get('_route') == 'app_home' %}text-white{% endif %}" href="{{ path('app_home') }}">Accueil</a>
+                    <a class="mr-5 hover:text-white {% if app.request.attributes.get('_route') == 'app_game_list' %}text-white{% endif %}" href="{{ path('app_game_list') }}">Jeux</a>
+                    <a class="mr-5 hover:text-white {% if app.request.attributes.get('_route') == 'app_about' %}text-white{% endif %}" href="{{ path('app_about') }}">À propos</a>
+                    {% if app.user %}
+                        <a class="mr-5 hover:text-white {% if app.request.attributes.get('_route') == 'app_wishlist' %}text-white{% endif %}" href="{{ path('app_wishlist') }}">Ma liste</a>
+                    {% endif %}
+                </nav>
+                <div class="flex items-center gap-2">
+                    {% if app.user %}
+                        <span class="text-gray-400 text-sm">{{ app.user.userIdentifier }}</span>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a class="inline-flex items-center bg-blue-600 border-0 py-2 px-3 focus:outline-none hover:bg-blue-700 rounded text-white text-sm" href="{{ path('admin') }}">Admin</a>
+                        {% endif %}
+                        <a class="inline-flex items-center bg-gray-800 border-0 py-2 px-3 focus:outline-none hover:bg-gray-700 rounded text-base" href="{{ path('app_logout') }}">Déconnexion</a>
+                    {% else %}
+                        <a class="inline-flex items-center bg-gray-800 border-0 py-2 px-3 focus:outline-none hover:bg-gray-700 rounded text-base" href="{{ path('app_login') }}">Connexion</a>
+                    {% endif %}
+                </div>
+            </div>
+        </header>
+
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="fixed top-20 right-4 z-50 px-6 py-3 rounded-lg shadow-lg font-medium transition {{ type == 'success' ? 'bg-green-600 text-white' : 'bg-red-600 text-white' }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+        {% block body %}{% endblock %}
+
+        <footer class="text-gray-400 bg-gray-950 body-font mt-auto">
+            <div class="container px-5 py-8 mx-auto flex items-center sm:flex-row flex-col">
+                <a class="flex title-font font-medium items-center md:justify-start justify-center text-white" href="{{ path('app_home') }}">
+                    <span class="text-xl font-bold">🎮 <span class="text-blue-500">All</span>Jeux</span>
+                </a>
+                <p class="text-sm text-gray-400 sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-800 sm:py-2 sm:mt-0 mt-4">© {{ 'now'|date('Y') }} AllGames</p>
+                <span class="inline-flex sm:ml-auto sm:mt-0 mt-4 justify-center sm:justify-start">
+                    <a class="text-gray-400 hover:text-white" href="#">
+                        <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
+                            <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
+                        </svg>
+                    </a>
+                    <a class="ml-3 text-gray-400 hover:text-white" href="#">
+                        <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
+                            <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path>
+                        </svg>
+                    </a>
+                    <a class="ml-3 text-gray-400 hover:text-white" href="#">
+                        <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
+                            <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01"></path>
+                        </svg>
+                    </a>
+                    <a class="ml-3 text-gray-400 hover:text-white" href="#">
+                        <svg fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="0" class="w-5 h-5" viewBox="0 0 24 24">
+                            <path stroke="none" d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"></path>
+                            <circle cx="4" cy="4" r="2" stroke="none"></circle>
+                        </svg>
+                    </a>
+                </span>
+            </div>
+        </footer>
+    </body>
+</html>

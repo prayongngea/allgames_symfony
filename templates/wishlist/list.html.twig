@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ma liste de souhaits - AllGames{% endblock %}
+
+{% block body %}
+<section class="text-gray-400 bg-gray-900 body-font">
+    <div class="container px-5 py-14 mx-auto">
+        <h1 class="title-font font-medium text-4xl mb-8 text-white">Ma liste de souhaits</h1>
+        {% if wishlistItems|length > 0 %}
+            <div class="flex flex-wrap sm:-m-4 -mx-4 -mb-10 -mt-4">
+                {% for item in wishlistItems %}
+                    {% include 'game/_game_item.html.twig' with {'game': item.game} %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-16">
+                <div class="text-6xl mb-4">💔</div>
+                <p class="text-gray-400 text-xl mb-4">Votre liste est vide.</p>
+                <a href="{{ path('app_game_list') }}" class="inline-flex text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg">Parcourir les jeux</a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

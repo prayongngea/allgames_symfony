@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}À propos d'AllGames{% endblock %}
+
+{% block body %}
+<section class="text-gray-400 bg-gray-900 body-font">
+    <div class="container mx-auto flex px-5 py-24 items-center justify-center flex-col">
+        <div class="text-center mb-10 text-8xl">🎮</div>
+        <div class="text-center lg:w-2/3 w-full">
+            <h1 class="title-font sm:text-4xl text-3xl mb-4 font-medium text-white">À propos d'AllGames</h1>
+            <p class="leading-relaxed mb-8">
+                We're dedicated to connecting gamers with the titles they love. Our mission is to simplify how you discover, wishlist, and track the best games across all genres and platforms. Whether you're an avid collector or seeking your next favorite pastime, we're here to help you explore new adventures and get the most out of your gaming journey.
+            </p>
+            <div class="flex justify-center gap-4">
+                <a href="{{ path('app_game_list') }}" class="inline-flex text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded text-lg">Browse Games</a>
+                {% if not app.user %}
+                    <a href="{{ path('app_login') }}" class="inline-flex text-white bg-gray-700 border-0 py-2 px-6 focus:outline-none hover:bg-gray-600 rounded text-lg">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
