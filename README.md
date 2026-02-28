@@ -28,4 +28,4 @@ Nom d'utilisateur (admin) (user)
 
 mot de passe (admin123) (user123)
 
-acces (/admin + toutes les fonctionnnalites) (wishlist + Reviews)
+acces (/admin + toutes les fonctionnnalites) (wishlist + Reviews)# allgames_symfony
